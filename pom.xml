@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ru.moysklad</groupId>
 	<artifactId>romashka</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>romashka</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -27,7 +27,8 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
