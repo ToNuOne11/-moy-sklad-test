@@ -1,16 +1,18 @@
 package ru.moysklad.romashka.api.controller;
 
-import lombok.AllArgsConstructor;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.moysklad.romashka.api.dto.AckDto;
 import ru.moysklad.romashka.api.dto.ProductDto;
 import ru.moysklad.romashka.api.service.ProductService;
+import ru.moysklad.romashka.store.entity.ProductEntity;
 
 import java.util.List;
 
-
+@Transactional
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
@@ -20,24 +22,24 @@ public class ProductController {
         return  productService.getAll();
     }
 
-    @GetMapping("/api/product/{product_index}")
-    public ProductDto getProductByIndex(@PathVariable Integer product_index){
-        return  productService.getByIndex(product_index);
+    @GetMapping("/api/product/{product_id}")
+    public ProductDto getProductById(@PathVariable Long product_id){
+        return  productService.getById(product_id);
     }
 
     @PostMapping("/api/product")
-    public ProductDto addProduct(@RequestBody ProductDto product){
+    public ProductDto addProduct(@RequestBody ProductEntity product){
         return  productService.add(product);
     }
 
-    @PutMapping("/api/product/{product_index}")
-    public ProductDto changeProduct(@PathVariable Integer product_index, @RequestBody ProductDto product){
-        return  productService.changeProduct(product_index, product);
+    @PatchMapping("/api/product/{product_id}")
+    public ProductDto updateProduct(@PathVariable Long product_id, @RequestBody ProductEntity product){
+        return  productService.updateProduct(product_id, product);
     }
 
-    @DeleteMapping("/api/product/{product_index}")
-    public AckDto deleteProduct(@PathVariable Integer product_index){
-        return  productService.remove(product_index);
+    @DeleteMapping("/api/product/{product_id}")
+    public AckDto deleteProduct(@PathVariable Long product_id){
+        return  productService.remove(product_id);
     }
 }
 

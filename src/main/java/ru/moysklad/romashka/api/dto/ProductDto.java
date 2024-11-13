@@ -9,9 +9,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDto {
-    public static Integer Identity = 0;
-    @Builder.Default
-    Integer id = Identity;
+    Long id;
     @NonNull
     String name;
     String description;
