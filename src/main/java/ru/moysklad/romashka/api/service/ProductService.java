@@ -28,11 +28,28 @@ public class ProductService {
         return productDtoFactory.makeProductDto(product);
     }
 
-    public List<ProductDto> getAll() {
-        return productRepository.streamAllBy()
+    public List<ProductDto> getAll(
+            String name, BigDecimal price,
+            BigDecimal minPrice, BigDecimal maxPrice,
+            Boolean inStock, String sortBy, String sortOrder
+    ) {
+        if (Objects.isNull(name)) {
+            name = "";
+        }
+        if (Objects.isNull(sortOrder)) {
+            sortOrder = "ASC";
+        }
+
+        name = name.trim();
+        sortOrder = sortOrder.toUpperCase();
+
+        checkValidParametersOrThrowException(sortBy, sortOrder);
+
+        return productRepository.streamByFiltersAndSort(name, price, minPrice, maxPrice, inStock, sortBy, sortOrder)
                 .map(productDtoFactory::makeProductDto)
                 .toList();
     }
+
 
     public ProductDto getById(Long productId) {
         return productDtoFactory.makeProductDto(findProductOrThrowException(productId));
@@ -73,13 +90,22 @@ public class ProductService {
 
     private void checkValidProductOrThrowException(ProductEntity product) {
         if (Objects.nonNull(product.getName()) && product.getName().length() > 255) {
-            throw new BadRequestException("Name length mustn`t > 255");
+            throw new BadRequestException("Name length must < 255");
         }
         if (Objects.nonNull(product.getDescription()) && product.getDescription().length() > 4096) {
-            throw new BadRequestException("Name length mustn`t > 4096 ");
+            throw new BadRequestException("Name length must < 4096 ");
         }
         if (Objects.nonNull(product.getPrice()) && product.getPrice().compareTo(BigDecimal.ZERO) < 0) {
-            throw new BadRequestException("price mustn`t be < 0");
+            throw new BadRequestException("price must be > 0");
+        }
+    }
+
+    private void checkValidParametersOrThrowException(String sortBy, String sortOrder) {
+        if (Objects.nonNull(sortBy) && !(Objects.equals(sortBy, "name") || Objects.equals(sortBy, "price"))) {
+            throw new BadRequestException("sort_by must be only 'name' or 'price'");
+        }
+        if (Objects.nonNull(sortOrder) && !(Objects.equals(sortOrder, "DESC") || Objects.equals(sortOrder, "ASC"))) {
+            throw new BadRequestException("sort_order must be only DESC or ASC");
         }
     }
 }

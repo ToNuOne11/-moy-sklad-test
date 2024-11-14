@@ -8,6 +8,7 @@ import ru.moysklad.romashka.api.dto.ProductDto;
 import ru.moysklad.romashka.api.service.ProductService;
 import ru.moysklad.romashka.store.entity.ProductEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Transactional
@@ -18,8 +19,16 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/api/products")
-    public List<ProductDto> getProducts(){
-        return  productService.getAll();
+    public List<ProductDto> getProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) BigDecimal price,
+            @RequestParam(required = false) BigDecimal min_price,
+            @RequestParam(required = false) BigDecimal max_price,
+            @RequestParam(required = false) Boolean in_stock,
+            @RequestParam(required = false) String sort_by,
+            @RequestParam(required = false) String sort_order
+    ) {
+        return productService.getAll(name, price, min_price, max_price, in_stock, sort_by, sort_order);
     }
 
     @GetMapping("/api/product/{product_id}")
